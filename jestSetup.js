@@ -167,7 +167,8 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedProps: jest.fn,
     Easing: {
       linear: jest.fn,
-      elastic: jest.fn
+      elastic: jest.fn,
+      bezier: jest.fn
     }
   }
 })
