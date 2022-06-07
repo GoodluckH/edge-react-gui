@@ -103,10 +103,10 @@ export const getProfile = (): Profile => {
   const appId = config.appId
 
   return {
-    appId,
+    appId: 'edge',
     appVersion,
-    language: languageTag,
-    location: countryCode,
+    language: 'enUS',
+    location: 'US',
     platform
   }
 }

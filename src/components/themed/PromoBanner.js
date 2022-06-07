@@ -6,6 +6,7 @@ import Carousel from 'react-native-reanimated-carousel'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions.js'
+import { useWindowSize } from '../../hooks/useWindowSize.js'
 import { useCallback, useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type AppFlags, type Promotion, getProfile, getPromotions, hasWyreLinkedBank, testProfile } from '../../util/promoHelpers.js'
@@ -21,7 +22,7 @@ export const PromoBanner = () => {
 
   const [promotions, setPromotions] = useState<Promotion[]>([])
   const [localFlags, setLocalFlags] = useState<AppFlags>({})
-
+  const { width } = useWindowSize()
   // Define user profile
   const profile = useMemo(() => getProfile(), [])
 
@@ -30,7 +31,7 @@ export const PromoBanner = () => {
     let abort = false
     getPromotions().then(promos => {
       if (abort) return
-      setPromotions(promos.filter(promo => testProfile(profile, promo)))
+      setPromotions(promos)
     })
 
     return () => {
@@ -41,15 +42,11 @@ export const PromoBanner = () => {
   // Test for wyreLinkedBank
   useEffect(() => {
     if (localFlags.wyreLinkedBank != null) return
-    let abort = false
-    hasWyreLinkedBank(store).then(bool => {
-      if (abort) return
-      setLocalFlags({ ...localFlags, wyreLinkedBank: bool })
-    })
-
-    return () => {
-      abort = true
-    }
+    // let abort = false
+    // hasWyreLinkedBank(store).then(bool => {
+    //   if (abort) return
+    setLocalFlags({ ...localFlags, wyreLinkedBank: true })
+    // })
   }, [localFlags])
 
   // Promo card actions
@@ -87,8 +84,12 @@ export const PromoBanner = () => {
   const promoCards = useMemo(
     () =>
       promotions
+        .concat(promotions)
         .filter(promo => Object.keys(promo.appFlags).every(flag => localFlags[flag] === true))
+        .filter(promo => promo.message[profile.language] != null)
         .map(promo => {
+          console.log('88. promo', promo)
+          console.log('89. profile', profile)
           const { imageUrl, body } = promo.message[profile.language]
           return { message: body, iconUri: imageUrl, onPress: () => promoCardOnPress('https://www.edge.app'), onClose: () => promoCardOnClose(promo.messageId) } // TODO: replace website with actual url
         }),
@@ -102,16 +103,21 @@ export const PromoBanner = () => {
   // Disable spin and preview if there's only one card to display
   const enabled = promoCards.length !== 1
   const autoFillData = promoCards.length !== 1
+  const modeConfig = { parallaxScrollingScale: 0.8, parallaxAdjacentItemScale: 0.75, parallaxScrollingOffset: width / 5 }
+  // const modeConfig = { parallaxScrollingScale: 1, parallaxAdjacentItemScale: 0, }
 
   return (
     <Carousel
+      autoPlay={false}
+      modeConfig={modeConfig}
       enabled={enabled}
       autoFillData={autoFillData}
       mode="parallax"
-      width={300}
-      height={150}
+      width={width}
       data={promoCards}
-      renderItem={({ item }) => <PromoCard message={item.message} iconUri={item.iconUri} onPress={item.onPress} onClose={item.onClose} />}
+      renderItem={({ item, animationValue }) => (
+        <PromoCard animationValue={animationValue} message={item.message} iconUri={item.iconUri} onPress={item.onPress} onClose={item.onClose} />
+      )}
     />
   )
 }
