@@ -22,40 +22,42 @@ export const PromoCard = (props: Props) => {
   const { message, iconUri, onPress, onClose, animationValue } = props
   const theme = getTheme()
   const styles = getStyles(theme)
-  // const { width } = useWindowSize()
-  // const positionX = useSharedValue(animationValue ?? 0)
-  // const sharedWidth = useSharedValue(width)
+  const { width } = useWindowSize()
+  const positionX = useSharedValue(animationValue ?? 0)
+  const sharedWidth = useSharedValue(width)
 
-  // const animatedStyle = useAnimatedStyle(() => ({
-  //   transform: [
-  //     {
-  //       perspective: interpolate(positionX.value, [-1, 0, 1], [850, 0, 850], {
-  //         extrapolateLeft: Extrapolation.CLAMP,
-  //         extrapolateRight: Extrapolation.CLAMP
-  //       })
-  //     },
-  //     { translateX: -sharedWidth.value / 2 },
-  //     {
-  //       rotateY: interpolate(positionX.value, [-1, 1], [-60, 60], {
-  //         extrapolateLeft: Extrapolation.CLAMP,
-  //         extrapolateRight: Extrapolation.CLAMP
-  //       })
-  //     }
-  //   ]
-  // }))
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          perspective: interpolate(positionX.value, [-1, 0, 1], [850, 0, 850], {
+            extrapolateLeft: Extrapolation.CLAMP,
+            extrapolateRight: Extrapolation.CLAMP
+          })
+        },
+        { translateX: -sharedWidth.value / 2 },
+        {
+          rotateY: interpolate(positionX.value, [-1, 1], [-60, 60], {
+            extrapolateLeft: Extrapolation.CLAMP,
+            extrapolateRight: Extrapolation.CLAMP
+          })
+        }
+      ]
+    }
+  })
 
   return (
-    // <Animated.View animatedStyle={animatedStyle}>
-    <TouchableOpacity onPress={onPress} style={styles.container}>
-      {iconUri != null ? <FastImage resizeMode="contain" source={{ uri: iconUri }} style={styles.icon} /> : null}
-      <EdgeText numberOfLines={0} style={styles.text}>
-        {message}
-      </EdgeText>
-      <TouchableOpacity onPress={onClose}>
-        <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+    <Animated.View animatedStyle={animatedStyle}>
+      <TouchableOpacity onPress={onPress} style={styles.container}>
+        {iconUri != null ? <FastImage resizeMode="contain" source={{ uri: iconUri }} style={styles.icon} /> : null}
+        <EdgeText numberOfLines={0} style={styles.text}>
+          {message}
+        </EdgeText>
+        <TouchableOpacity onPress={onClose}>
+          <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+        </TouchableOpacity>
       </TouchableOpacity>
-    </TouchableOpacity>
-    // </Animated.View>
+    </Animated.View>
   )
 }
 
@@ -64,8 +66,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.tileBackground,
-    borderColor: theme.lineDivider,
-    borderWidth: theme.dividerLineHeight,
+    borderColor: theme.defaultBorderColor,
+    borderWidth: theme.thinLineWidth,
     borderRadius: 4,
     padding: theme.rem(0.5),
     height: '100%'

@@ -100,13 +100,13 @@ export const getProfile = (): Profile => {
   const { languageTag, countryCode } = getLocales()[0]
   const platform = Platform.OS
   const appVersion = getVersion() //  99.99.99
-  const appId = config.appId
+  const appId = config.appId ?? 'edge'
 
   return {
-    appId: 'edge',
+    appId,
     appVersion,
-    language: 'enUS',
-    location: 'US',
+    language: languageTag,
+    location: countryCode,
     platform
   }
 }

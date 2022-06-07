@@ -13,6 +13,26 @@ import { type AppFlags, type Promotion, getProfile, getPromotions, hasWyreLinked
 import { bestOfMessages } from '../../util/ReferralHelpers.js'
 import { PromoCard } from '../cards/PromoCard.js'
 
+const dummyPromo = {
+  messageId: '12345',
+  message: {
+    'en-US': {
+      title: 'hello',
+      body: 'world',
+      imageUrl: 'https://content.edge.app/currencyIcons/bitcoincash/bitcoincash.png'
+    }
+  },
+  locations: {
+    US: true
+  },
+  appFlags: {
+    wyreLinkedBank: true
+  },
+  appId: 'edge',
+  forPlatform: 'ios',
+  maxVersion: '7'
+}
+
 export const PromoBanner = () => {
   const dispatch = useDispatch()
 
@@ -25,7 +45,7 @@ export const PromoBanner = () => {
   const { width } = useWindowSize()
   // Define user profile
   const profile = useMemo(() => getProfile(), [])
-
+  console.log('28. profile', profile)
   // Get active promotions
   useEffect(() => {
     let abort = false
@@ -84,7 +104,7 @@ export const PromoBanner = () => {
   const promoCards = useMemo(
     () =>
       promotions
-        .concat(promotions)
+        .concat([dummyPromo, dummyPromo, dummyPromo, dummyPromo, dummyPromo])
         .filter(promo => Object.keys(promo.appFlags).every(flag => localFlags[flag] === true))
         .filter(promo => promo.message[profile.language] != null)
         .map(promo => {
@@ -93,7 +113,7 @@ export const PromoBanner = () => {
           const { imageUrl, body } = promo.message[profile.language]
           return { message: body, iconUri: imageUrl, onPress: () => promoCardOnPress('https://www.edge.app'), onClose: () => promoCardOnClose(promo.messageId) } // TODO: replace website with actual url
         }),
-    [localFlags, profile.language, promotions]
+    [localFlags, profile, promoCardOnClose, promoCardOnPress, promotions]
   )
   if (referralPromoCard != null) promoCards.push(referralPromoCard)
 
@@ -103,7 +123,7 @@ export const PromoBanner = () => {
   // Disable spin and preview if there's only one card to display
   const enabled = promoCards.length !== 1
   const autoFillData = promoCards.length !== 1
-  const modeConfig = { parallaxScrollingScale: 0.8, parallaxAdjacentItemScale: 0.75, parallaxScrollingOffset: width / 5 }
+  const modeConfig = { parallaxScrollingScale: 0.8, parallaxAdjacentItemScale: 0.7, parallaxScrollingOffset: width / 5 }
   // const modeConfig = { parallaxScrollingScale: 1, parallaxAdjacentItemScale: 0, }
 
   return (
@@ -115,7 +135,7 @@ export const PromoBanner = () => {
       mode="parallax"
       width={width}
       data={promoCards}
-      renderItem={({ item, animationValue }) => (
+      renderItem={({ item, index, animationValue }) => (
         <PromoCard animationValue={animationValue} message={item.message} iconUri={item.iconUri} onPress={item.onPress} onClose={item.onClose} />
       )}
     />
