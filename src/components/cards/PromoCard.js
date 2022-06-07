@@ -8,7 +8,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useWindowSize } from '../../hooks/useWindowSize.js'
 import { type Theme, cacheStyles, getTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
   message: string,
