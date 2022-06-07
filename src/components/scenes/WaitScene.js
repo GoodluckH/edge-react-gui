@@ -3,7 +3,6 @@
 import LottieView from 'lottie-react-native'
 import * as React from 'react'
 import { View } from 'react-native'
-import { useEffect, useRef } from '../../types/reactHooks'
 import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { cacheStyles, useTheme, type Theme } from '../services/ThemeContext'
@@ -14,14 +13,7 @@ type Props = {
 }
 
 
-export const WaitScene = (props: Props, ) => {
-
-  const animationRef = useRef<LottieView | null>(); // The <> is for TypeScript, but can be removed for JavaScript
-
-  useEffect(() => {
-    animationRef.current?.play();
-  }, []);
-
+export const WaitScene = (props: Props) => {
   const { message } = props.route.params
 
   const theme = useTheme()
@@ -30,12 +22,12 @@ export const WaitScene = (props: Props, ) => {
   return (
     <SceneWrapper>
       <View style={styles.content}>
-        <EdgeText style={styles.message}>{message}</EdgeText>
+        <EdgeText style={styles.message} numberOfLines={2}>
+          {message}
+        </EdgeText>
         <View style={styles.spinner}>
-          <LottieView ref={(animation) => {
-        animationRef.current = animation;
-      }}
-      source={require('../../assets/images/Edge-Final-Logo-Animation.json')} loop />
+          <LottieView
+      source={require('../../assets/images/Edge-Final-Logo-Animation3.json')} loop autoPlay  />
         </View>
       </View>
     </SceneWrapper>
@@ -49,10 +41,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   message: {
-    fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(1),
+    fontSize: theme.rem(2),
     marginBottom: theme.rem(2),
-    textAlign: 'center'
+    marginHorizontal: theme.rem(2),
+    textAlign: 'center',
   },
   spinner: {
     width: theme.rem(5),

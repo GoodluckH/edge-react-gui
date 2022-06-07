@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { YellowBox } from 'react-native'
 import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
 import { registerDevice } from '../actions/DeviceIdActions.js'
@@ -94,8 +95,11 @@ import {
   STAKE_MODIFY,
   STAKE_OPTIONS,
   STAKE_OVERVIEW,
-  TERMS_OF_SERVICE, TRANSACTIONS_EXPORT, TRANSACTION_DETAILS,
-  TRANSACTION_LIST, WALLET_LIST,
+  TERMS_OF_SERVICE,
+  TRANSACTION_DETAILS,
+  TRANSACTION_LIST,
+  TRANSACTIONS_EXPORT,
+  WALLET_LIST,
   WALLET_LIST_SCENE
 } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
@@ -153,7 +157,6 @@ import { WcConnectScene } from './scenes/WcConnectScene'
 import { WcDisconnectScene } from './scenes/WcDisconnectScene'
 import { Airship } from './services/AirshipInstance.js'
 import { MenuTab } from './themed/MenuTab.js'
-
 
 const RouterWithRedux = connect<
   {},

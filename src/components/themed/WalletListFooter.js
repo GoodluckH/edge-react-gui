@@ -26,7 +26,8 @@ export const WalletListFooter = (props: Props) => {
   const account = useSelector(state => state.core.account)
 
   const handleAddWallet = useHandler(() => {
-    navigation.navigate('waitScene', { message: "Test 123"})
+    // navigation.navigate('waitScene', { message: s.strings.edge_login_fetching_message })
+    navigation.navigate('edgeLogin')
   })
 
   const handleAddToken = useHandler(() => {

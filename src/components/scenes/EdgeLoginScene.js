@@ -6,6 +6,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import { sprintf } from 'sprintf-js'
+
 import { lobbyLogin } from '../../actions/EdgeLoginActions.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -15,7 +16,6 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-
 
 type OwnProps = {
   navigation: NavigationProp<'edgeLogin'>
@@ -42,7 +42,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
       throw new Error('Not normal expected behavior')
     }
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.appId === '') {
-      message = sprintf("This is a test", this.props.lobby.loginRequest.displayName)
+      message = sprintf(s.strings.edge_description_warning, this.props.lobby.loginRequest.displayName)
     }
     return (
       <View style={styles.body}>
@@ -127,7 +127,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
       )
     }
     return (
-      <SceneWrapper background="body">
+      <SceneWrapper background="theme">
         {this.renderHeader()}
         {this.renderBody()}
         {this.renderButtons()}

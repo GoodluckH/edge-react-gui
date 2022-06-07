@@ -240,7 +240,7 @@ export type ParamList = {
     currencyCode: string
   |},
   waitScene: {|
-    message: string,
+    message: string
   |},
   walletList: void,
   walletListScene: void,

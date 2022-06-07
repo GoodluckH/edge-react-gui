@@ -679,6 +679,7 @@ const strings = {
   edge_login_failed: 'Failed to Login',
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
+  edge_login_fetching_message: 'Please wait while we fetch your Edge login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
   modal_addressexplorer_null: 'This currency has no explorer site as of now',
   approximately: 'Estimated',
