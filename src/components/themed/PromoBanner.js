@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type AppFlags, type Promotion, getProfile, getPromotions, hasWyreLinkedBank, testProfile } from '../../util/promoHelpers.js'
 import { bestOfMessages } from '../../util/ReferralHelpers.js'
 import { PromoCard } from '../cards/PromoCard.js'
+import { useTheme } from '../services/ThemeContext.js'
 
 const dummyPromo = {
   messageId: '12345',
@@ -39,6 +40,7 @@ export const PromoBanner = () => {
   const accountMessages = useSelector(state => state.account.referralCache.accountMessages)
   const accountReferral = useSelector(state => state.account.accountReferral)
   const store = useSelector(state => state.core.account.dataStore)
+  const theme = useTheme()
 
   const [promotions, setPromotions] = useState<Promotion[]>([])
   const [localFlags, setLocalFlags] = useState<AppFlags>({})
@@ -123,17 +125,22 @@ export const PromoBanner = () => {
   // Disable spin and preview if there's only one card to display
   const enabled = promoCards.length !== 1
   const autoFillData = promoCards.length !== 1
-  const modeConfig = { parallaxScrollingScale: 0.8, parallaxAdjacentItemScale: 0.7, parallaxScrollingOffset: width / 5 }
-  // const modeConfig = { parallaxScrollingScale: 1, parallaxAdjacentItemScale: 0, }
+  const modeConfig = {
+    parallaxScrollingScale: 0.8,
+    parallaxAdjacentItemScale: 0.75,
+    parallaxScrollingOffset: width / 7.5
+  }
 
   return (
     <Carousel
       autoPlay={false}
       modeConfig={modeConfig}
       enabled={enabled}
+      scrollAnimationDuration={2000}
       autoFillData={autoFillData}
       mode="parallax"
       width={width}
+      height={theme.rem(6.75)}
       data={promoCards}
       renderItem={({ item, index, animationValue }) => (
         <PromoCard animationValue={animationValue} message={item.message} iconUri={item.iconUri} onPress={item.onPress} onClose={item.onClose} />

@@ -81,11 +81,7 @@ export const WalletListHeader = (props: Props) => {
           </View>
         </View>
       )}
-      {!searching && (
-        <View style={styles.promoContainer}>
-          <PromoBanner />
-        </View>
-      )}
+      {!searching && <PromoBanner />}
     </>
   )
 }
@@ -95,9 +91,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     marginTop: theme.rem(0.5),
     marginHorizontal: theme.rem(1)
-  },
-  promoContainer: {
-    height: theme.rem(16)
   },
   headerText: {
     flex: 1
