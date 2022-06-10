@@ -14,25 +14,84 @@ import { bestOfMessages } from '../../util/ReferralHelpers.js'
 import { PromoCard } from '../cards/PromoCard.js'
 import { useTheme } from '../services/ThemeContext.js'
 
-const dummyPromo = {
-  messageId: '12345',
-  message: {
-    'en-US': {
-      title: 'hello',
-      body: 'world',
-      imageUrl: 'https://content.edge.app/currencyIcons/bitcoincash/bitcoincash.png'
-    }
+const dummyPromos = [
+  {
+    messageId: '12345',
+    message: {
+      'en-US': {
+        title: 'hello',
+        body: 'BCH',
+        imageUrl: 'https://content.edge.app/currencyIcons/bitcoincash/bitcoincash.png'
+      }
+    },
+    locations: {
+      US: true
+    },
+    appFlags: {
+      wyreLinkedBank: true
+    },
+    appId: 'edge',
+    forPlatform: 'ios',
+    maxVersion: '7'
   },
-  locations: {
-    US: true
+  {
+    messageId: '12345',
+    message: {
+      'en-US': {
+        title: 'hello',
+        body: 'BTC',
+        imageUrl: 'https://content.edge.app/currencyIcons/bitcoin/bitcoin.png'
+      }
+    },
+    locations: {
+      US: true
+    },
+    appFlags: {
+      wyreLinkedBank: true
+    },
+    appId: 'edge',
+    forPlatform: 'ios',
+    maxVersion: '7'
   },
-  appFlags: {
-    wyreLinkedBank: true
+  {
+    messageId: '12345',
+    message: {
+      'en-US': {
+        title: 'hello',
+        body: 'ETH',
+        imageUrl: 'https://content.edge.app/currencyIcons/ethereum/ethereum.png'
+      }
+    },
+    locations: {
+      US: true
+    },
+    appFlags: {
+      wyreLinkedBank: true
+    },
+    appId: 'edge',
+    forPlatform: 'ios',
+    maxVersion: '7'
   },
-  appId: 'edge',
-  forPlatform: 'ios',
-  maxVersion: '7'
-}
+  {
+    messageId: '12345',
+    message: {
+      'en-US': {
+        title: 'hello',
+        body: 'DOGE',
+        imageUrl: 'https://content.edge.app/currencyIcons/dogecoin/dogecoin.png'
+      }
+    },
+    locations: {
+      US: true
+    },
+    appFlags: {
+      wyreLinkedBank: true
+    },
+    appId: 'edge',
+    forPlatform: 'ios',
+    maxVersion: '7'
+  }
+]
 
 export const PromoBanner = () => {
   const dispatch = useDispatch()
@@ -106,12 +165,10 @@ export const PromoBanner = () => {
   const promoCards = useMemo(
     () =>
       promotions
-        .concat([dummyPromo, dummyPromo, dummyPromo, dummyPromo, dummyPromo])
+        .concat(dummyPromos)
         .filter(promo => Object.keys(promo.appFlags).every(flag => localFlags[flag] === true))
         .filter(promo => promo.message[profile.language] != null)
         .map(promo => {
-          console.log('88. promo', promo)
-          console.log('89. profile', profile)
           const { imageUrl, body } = promo.message[profile.language]
           return { message: body, iconUri: imageUrl, onPress: () => promoCardOnPress('https://www.edge.app'), onClose: () => promoCardOnClose(promo.messageId) } // TODO: replace website with actual url
         }),

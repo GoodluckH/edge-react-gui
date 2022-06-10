@@ -56,11 +56,13 @@ export const PromoCard = (props: Props) => {
       <Animated.View style={[styles.container, borderAnimatedStyle]}>
         <Animated.View style={[styles.content, contentAnimatedStyle]}>
           {iconUri != null ? <FastImage resizeMode="contain" source={{ uri: iconUri }} style={styles.icon} /> : null}
+
           <EdgeText numberOfLines={0} style={styles.text}>
             {message}
           </EdgeText>
+
           <TouchableOpacity onPress={onClose}>
-            <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+            <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(2.5)} style={styles.close} />
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
@@ -70,27 +72,25 @@ export const PromoCard = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: theme.modal,
     borderWidth: theme.thinLineWidth,
     borderRadius: theme.rem(0.25),
-    padding: theme.rem(0.5),
+    padding: theme.rem(1),
     height: '100%'
   },
   content: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
   },
   icon: {
-    width: theme.rem(2),
-    height: theme.rem(2),
-    margin: theme.rem(0.5)
+    width: theme.rem(4),
+    height: theme.rem(4)
   },
   text: {
     flex: 1,
-    margin: theme.rem(0.5)
+    marginLeft: theme.rem(1),
+    fontSize: theme.rem(3.5)
   },
-  close: {
-    padding: theme.rem(0.5)
-  }
+  close: {}
 }))
