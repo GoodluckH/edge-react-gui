@@ -16,6 +16,10 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { MainButton } from '../themed/MainButton.js'
+import type { Theme, ThemeProps } from '../services/ThemeContext'
+import { cacheStyles, withTheme } from '../services/ThemeContext'
+
 
 type OwnProps = {
   navigation: NavigationProp<'edgeLogin'>
@@ -30,11 +34,15 @@ type DispatchProps = {
   accept: () => void
 }
 
-type Props = StateProps & DispatchProps & OwnProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-export class EdgeLoginSceneComponent extends React.Component<Props> {
+export class EdgeLoginSceneComponent extends React.PureComponent<Props> {
   renderBody() {
+
     let message = this.props.error
+    const { theme } = this.props
+    const styles = getStyles(theme)
+
     if (!this.props.error) {
       message = sprintf(s.strings.access_wallet_description, config.appName)
     }
@@ -54,7 +62,8 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
   renderButtons() {
     const { navigation } = this.props
     const handleDecline = () => navigation.goBack()
-
+    const { theme } = this.props
+    const styles = getStyles(theme)
     if (this.props.isProcessing) {
       return (
         <View style={styles.buttonsProcessing}>
@@ -64,30 +73,22 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
     }
     if (this.props.error) {
       return (
-        <View style={styles.buttonContainer}>
           <View style={styles.buttons}>
-            <SecondaryButton style={styles.cancelSolo} onPress={handleDecline}>
-              <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
-            </SecondaryButton>
+            <MainButton label={s.strings.string_cancel_cap} onPress={this.props.accept} type="secondary" onPress={handleDecline}/>
           </View>
-        </View>
       )
     }
     return (
-      <View style={styles.buttonContainer}>
         <View style={styles.buttons}>
-          <SecondaryButton style={styles.cancel} onPress={handleDecline}>
-            <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
-          </SecondaryButton>
-          <PrimaryButton style={styles.submit} onPress={this.props.accept}>
-            <PrimaryButton.Text>{s.strings.accept_button_text}</PrimaryButton.Text>
-          </PrimaryButton>
+          <MainButton marginRem={[1, 0, 1, 0]} label={s.strings.accept_button_text} onPress={this.props.accept} />
+          <MainButton label={s.strings.string_cancel_cap} type="secondary" onPress={handleDecline} />
         </View>
-      </View>
     )
   }
 
   renderImage() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
       return <FastImage style={styles.image} resizeMode="contain" source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
@@ -96,6 +97,8 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
 
   renderHeader() {
     let title = ''
+    const { theme } = this.props
+    const styles = getStyles(theme)
     if (this.props.lobby && this.props.lobby.loginRequest) {
       title = this.props.lobby.loginRequest.displayName ? this.props.lobby.loginRequest.displayName : ''
     }
@@ -116,9 +119,11 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
   }
 
   render() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     if (!this.props.lobby && !this.props.error) {
       return (
-        <SceneWrapper background="body">
+        <SceneWrapper background="theme">
           <View style={styles.spinnerContainer}>
             <Text style={styles.loadingTextBody}>{s.strings.edge_login_fetching}</Text>
             <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
@@ -136,7 +141,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   header: {
     position: 'relative',
     flex: 3,
@@ -174,11 +179,7 @@ const rawStyles = {
     justifyContent: 'flex-end'
   },
   buttons: {
-    marginRight: '5%',
-    marginLeft: '5%',
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    paddingBottom: isIPhoneX ? 30 : 20
+    margin: theme.rem(1),
   },
   buttonsProcessing: {
     flex: 1,
@@ -207,7 +208,6 @@ const rawStyles = {
   },
   cancel: {
     flex: 1,
-    marginRight: '1.5%',
     backgroundColor: THEME.COLORS.GRAY_2,
     justifyContent: 'center',
     alignItems: 'center',
@@ -228,8 +228,7 @@ const rawStyles = {
     alignItems: 'center',
     borderRadius: 3
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const EdgeLoginScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
@@ -242,4 +241,4 @@ export const EdgeLoginScene = connect<StateProps, DispatchProps, OwnProps>(
       dispatch(lobbyLogin())
     }
   })
-)(EdgeLoginSceneComponent)
+)(withTheme(EdgeLoginSceneComponent))
