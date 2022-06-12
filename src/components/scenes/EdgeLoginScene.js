@@ -6,6 +6,8 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import { sprintf } from 'sprintf-js'
+import { EdgeText } from '../themed/EdgeText.js'
+import { Alert } from '../themed/Alert'
 
 import { lobbyLogin } from '../../actions/EdgeLoginActions.js'
 import s from '../../locales/strings.js'
@@ -45,6 +47,11 @@ export class EdgeLoginSceneComponent extends React.PureComponent<Props> {
 
     if (!this.props.error) {
       message = sprintf(s.strings.access_wallet_description, config.appName)
+      return (
+        <View style={styles.body}>
+          <Alert title={message} type="warning" marginRem={[1.5, 1]} />
+        </View>
+      )
     }
     if (!this.props.lobby && !this.props.error) {
       throw new Error('Not normal expected behavior')
@@ -54,7 +61,7 @@ export class EdgeLoginSceneComponent extends React.PureComponent<Props> {
     }
     return (
       <View style={styles.body}>
-        <Text style={styles.bodyText}>{message}</Text>
+        <EdgeText style={styles.loginTextWarning}>{message}</EdgeText>
       </View>
     )
   }
@@ -180,6 +187,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   buttons: {
     margin: theme.rem(1),
+  },
+  loginTextWarning: {
+    color: theme.warningText
+  },
+  loginTextDanger: {
+    color: theme.dangerText
   },
   buttonsProcessing: {
     flex: 1,
